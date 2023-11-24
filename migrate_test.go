@@ -54,28 +54,7 @@ CREATE TABLE user (
 					return err
 				}
 				defer t.Rollback()
-				_, err = t.Exec(`
-CREATE TABLE user_new (
-    id INTEGER,
-    name TEXT,
-    description TEXT,
-    PRIMARY KEY (id)
-)`)
-				if err != nil {
-					return err
-				}
-				_, err = t.Exec(`
-INSERT INTO user_new
-(id, name, "")
-SELECT id, name FROM user`)
-				if err != nil {
-					return err
-				}
-				_, err = t.Exec(`DROP TABLE user`)
-				if err != nil {
-					return err
-				}
-				_, err = t.Exec(`ALTER TABLE user_new RENAME TO user`)
+				_, err = t.Exec(`ALTER TABLE user ADD COLUMN description TEXT`)
 				if err != nil {
 					return err
 				}
