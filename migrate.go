@@ -42,7 +42,7 @@ type MigrationSet struct {
 // not be retained by the caller.
 //
 // The input slice should be sorted in increasing order of
-// [Migration.From].
+// the "From" field.
 //
 // If there is more than one [Migration] with the same "From" value,
 // then one is chosen arbitrarily when upgrading databases with that
