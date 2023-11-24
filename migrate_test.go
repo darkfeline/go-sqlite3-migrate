@@ -22,6 +22,75 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func Example() {
+	s := NewMigrationSet([]Migration{
+		{
+			From: 0,
+			To:   1,
+			Func: func(ctx context.Context, d *sql.DB) error {
+				t, err := d.Begin()
+				if err != nil {
+					return err
+				}
+				defer t.Rollback()
+				_, err = t.Exec(`
+CREATE TABLE user (
+    id INTEGER,
+    name TEXT,
+    PRIMARY KEY (id)
+)`)
+				if err != nil {
+					return err
+				}
+				return nil
+			},
+		},
+		{
+			From: 1,
+			To:   2,
+			Func: func(ctx context.Context, d *sql.DB) error {
+				t, err := d.Begin()
+				if err != nil {
+					return err
+				}
+				defer t.Rollback()
+				_, err = t.Exec(`
+CREATE TABLE user_new (
+    id INTEGER,
+    name TEXT,
+    description TEXT,
+    PRIMARY KEY (id)
+)`)
+				if err != nil {
+					return err
+				}
+				_, err = t.Exec(`
+INSERT INTO user_new
+(id, name, "")
+SELECT id, name FROM user`)
+				if err != nil {
+					return err
+				}
+				_, err = t.Exec(`DROP TABLE user`)
+				if err != nil {
+					return err
+				}
+				_, err = t.Exec(`ALTER TABLE user_new RENAME TO user`)
+				if err != nil {
+					return err
+				}
+				return nil
+			},
+		},
+	})
+
+	d, err := sql.Open("sqlite3", "file::memory:?mode=memory&cache=shared")
+	if err != nil {
+		panic(err)
+	}
+	_ = s.Migrate(context.Background(), d)
+}
+
 func TestEmptyMigration(t *testing.T) {
 	d := testDB(t)
 	defer d.Close()
