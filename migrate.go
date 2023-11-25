@@ -89,12 +89,12 @@ func (s *MigrationSet) Migrate(ctx context.Context, d *sql.DB) error {
 // NeedsMigrate returns whether the database needs migration.
 // This is equivalent to checking if the database is not the latest
 // version.
-func (s *MigrationSet) NeedsMigrate(d *sql.DB) (bool, err) {
+func (s *MigrationSet) NeedsMigrate(d *sql.DB) (bool, error) {
 	v, err := getUserVersion(d)
 	if err != nil {
 		return false, fmt.Errorf("needs migrate: %s", err)
 	}
-	return v != s.latest
+	return v != s.latest, nil
 }
 
 // A Migration describes how to migrate a database from one version to another.
