@@ -80,7 +80,7 @@ func (s *MigrationSet) Migrate(ctx context.Context, d *sql.DB) error {
 		v = m.To
 	}
 	if v != s.latest {
-		return fmt.Errorf("migrate: no migration path to version %d (current version %d)",
+		return fmt.Errorf("migrate: no migration path from %d to %d",
 			s.latest, v)
 	}
 	return nil
