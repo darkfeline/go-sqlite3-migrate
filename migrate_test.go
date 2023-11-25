@@ -82,9 +82,7 @@ func TestEmptyMigration(t *testing.T) {
 func TestSimpleMigration(t *testing.T) {
 	d := testDB(t)
 	defer d.Close()
-	var (
-		s0 spyFunc
-	)
+	var s0 spyFunc
 	s := NewMigrationSet([]Migration{{
 		From: 0,
 		To:   1,
@@ -95,6 +93,24 @@ func TestSimpleMigration(t *testing.T) {
 	}
 	if !s0.called {
 		t.Errorf("Migration function not called")
+	}
+}
+
+func TestNeedsMigrate(t *testing.T) {
+	d := testDB(t)
+	defer d.Close()
+	var s0 spyFunc
+	s := NewMigrationSet([]Migration{{
+		From: 0,
+		To:   1,
+		Func: s0.migrate,
+	}})
+	v, err := s.NeedsMigrate(d)
+	if err != nil {
+		t.Errorf("got unexpected error: %s", err)
+	}
+	if !v {
+		t.Errorf("MigrationSet.NeedsMigrate() returned false (want true)")
 	}
 }
 
