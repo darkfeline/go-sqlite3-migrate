@@ -17,8 +17,6 @@ package migrate
 import (
 	"database/sql"
 	"fmt"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func getUserVersion(d *sql.DB) (int, error) {

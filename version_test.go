@@ -16,8 +16,6 @@ package migrate
 
 import (
 	"testing"
-
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func TestUserVersion(t *testing.T) {
