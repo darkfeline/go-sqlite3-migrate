@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// Package migrate implements database migrations SQLite3 using the
-// [database/sql] interface.  In theory, it should work with any
+// Package migrate implements database migrations for SQLite3 using
+// the [database/sql] interface.  In theory, it should work with any
 // SQLite3 driver, but it is tested against
 // [github.com/mattn/go-sqlite3].
 //
